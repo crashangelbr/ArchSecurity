@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "|=+=+=+=+=+=+=+=+|"
+echo "  Security Linux  "
+echo "|=+=+=+=+=+=+=+=+|"
+sudo cp firewall-start /etc
+sudo cp firewall.service /etc/systemd/system/
+sudo chmod +x /etc/firewall-start 
+sudo chmod 755 /etc/systemd/system/firewall.service
+sudo systemctl enable firewall
+sudo systemctl start firewall
+sudo /etc/./firewall-start 
+sudo pacman -S dnscrypt-proxy --noconfirm
+sudo systemctl enable dnscrypt-proxy
+sudo systemctl start dnscrypt-proxy
+

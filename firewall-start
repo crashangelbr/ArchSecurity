@@ -1,0 +1,36 @@
+#!/bin/bash
+
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+printf " ${GREEN}[ Start Firewall ]\n"${NC}
+
+iptables --flush
+iptables -v -F;
+iptables -v -A INPUT -i lo -j ACCEPT;
+
+########### DENY RULE SET #############
+
+iptables -v -P INPUT DROP # Default Policy DROP
+iptables -v -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT;
+iptables -v -A INPUT -m state -m tcp --proto tcp --dport 80 --state NEW -j ACCEPT; # HTTP
+iptables -v -A INPUT -m state -m udp --proto udp --dport 53 --state NEW -j ACCEPT; # DNS
+#iptables -A INPUT -i eth0 -p tcp -m tcp --dport 22 -j ACCEPT
+iptables -v -A INPUT -j REJECT;
+
+######## OUTPUT FOR SERVICES NEEDED ########
+
+iptables -v -P OUTPUT ACCEPT # Default Policy Accept
+iptables -v -A OUTPUT -o lo -j ACCEPT;
+#iptables -v -A OUTPUT -o eth0 -j ACCEPT;
+iptables -A OUTPUT -p udp --dport 67 --dport 68 -j ACCEPT # DHCP
+iptables -v -A OUTPUT -m tcp --proto tcp --dport 80 -j ACCEPT; # HTTP
+iptables -v -A OUTPUT -m tcp --proto tcp --dport 443 -j ACCEPT; # HTTPS
+iptables -v -A OUTPUT -m udp --proto udp --dport 53 -j ACCEPT; # DNS
+#iptables -v -A OUTPUT -p tcp -m tcp --dport 22 -j ACCEPT
+iptables -v -A OUTPUT -j REJECT;
+
+######### DEFAULT DROPS #######
+
+iptables -v -P FORWARD DROP # Default Policy DROP
+iptables -v -A FORWARD -j REJECT;
