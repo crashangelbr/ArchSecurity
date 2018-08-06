@@ -13,4 +13,4 @@ sudo /etc/./firewall-start
 sudo pacman -S dnscrypt-proxy --noconfirm
 sudo systemctl enable dnscrypt-proxy
 sudo systemctl start dnscrypt-proxy
-
+sudo nmtui
